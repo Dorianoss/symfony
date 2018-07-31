@@ -3,10 +3,22 @@
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"> {% endblock %}
+        {% block userstyle %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+        <div class="container">
+            <div class="nav-scroller py-1 mb-2">
+                <nav class="nav d-flex justify-content-between">
+                    <a class="p-2 text-muted" href="{{ path('fos_user_security_login') }}">Login</a>
+                    <a class="p-2 text-muted" href="{{ path('fos_user_registration_register') }}">Register</a>
+                    <a class="p-2 text-muted" href="{{ path('post_index') }}">Posts</a>
+                    <a class="p-2 text-muted" href="{{ path('fos_user_profile_show') }}">Profile</a>
+                </nav>
+            </div>
+            {% block body %}{% endblock %}
+            {% block javascripts %}{% endblock %}
+        </div>
     </body>
 </html>

@@ -10,19 +10,16 @@ use App\Entity\User;
 class UserController extends Controller
 {
     /**
-     * @Route("/user", name="user")
-     * @param string $email
-     * @param string $password
+     * @Route("/user/add", name="app_user_add")
+     * @param User $user
      * @return Response
      * @throws \Exception
      */
-    public function addUser(string $email, string $password)
+    public function addUser(User $user)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $user = new User();
-        $user->setEmail($email);
-        $user->setPassword($password);
+        $email=$user->getEmail();
 
         $userTest = $this->getDoctrine()
             ->getRepository(User::class)
@@ -43,19 +40,17 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/user", name="user")
-     * @param string $email
-     * @param string $password
+     * @Route("/user/login", name="app_user_login")
+     * @param User $user
      * @return Response
      * @throws \Exception
      */
-    public function login(string $email, string $password)
+    public function login(User $user)
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $user = new User();
-        $user->setEmail($email);
-        $user->setPassword($password);
+        $email=$user->getEmail();
+        $password=$user->getPassword();
 
         $userTest = $this->getDoctrine()
             ->getRepository(User::class)

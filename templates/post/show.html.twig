@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Post{% endblock %}
+
+{% block body %}
+    <h1>Post</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ post.id }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>{{ post.Author.getUsername }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ post.Title }}</td>
+            </tr>
+            <tr>
+                <th>Content</th>
+                <td>{{ post.Content }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                {#<td>{{ post.getImage }}</td>#}
+                <td>
+                    <img src="{{ asset('/images/posts/' ~ post.getImage) }}"/>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('post_index') }}">back to list</a>
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    <a href="{{ path('post_edit', {'id': post.id}) }}">edit</a>
+
+    {{ include('post/_delete_form.html.twig') }}
+    {% endif %}
+{% endblock %}
