@@ -26,6 +26,11 @@ class User extends BaseUser
      */
     private $posts;
 
+    /**
+     * @ORM\Column(type="text", length=2000)
+     */
+    private $image;
+
     public function __construct()
     {
         parent::__construct();
@@ -61,6 +66,22 @@ class User extends BaseUser
         }
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param mixed $image
+     */
+    public function setImage($image): void
+    {
+        $this->image = $image;
     }
 
 }

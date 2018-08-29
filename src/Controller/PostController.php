@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Post;
 use App\Form\PostType;
+use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use App\Service\TitleAPI;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,11 +34,14 @@ class PostController extends Controller
     /**
      * @Route("/new", name="post_new", methods="GET|POST")
      * @param Request $request
+     * @param TitleAPI $titleAPI
      * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function new(Request $request): Response
+    public function new(Request $request, TitleAPI $titleAPI): Response
     {
         $post = new Post();
+        $post->setTitle($titleAPI->getTitle()['title']);
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
@@ -43,7 +49,6 @@ class PostController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
             $em->flush();
-
             return $this->redirectToRoute('post_index');
         }
 
@@ -103,5 +108,15 @@ class PostController extends Controller
         }
 
         return $this->redirectToRoute('post_index');
+    }
+
+    /**
+     * @Route("/category/{id}", name="category_list")
+     * @param Category $category
+     * @return Response
+     */
+    public function categoryList(Category $category)
+    {
+        return $this->render('post/index.html.twig', ['posts' => $category->getPosts()]);
     }
 }

@@ -6,15 +6,27 @@ use GuzzleHttp\Client;
 
 class TitleAPI
 {
+    /**
+     * @var Client
+     */
     private $client;
 
+    /**
+     * TitleAPI constructor.
+     * @param Client $client
+     */
     public function __construct(Client $client)
     {
         $this->client = $client;
     }
 
-    public function getTitle()
+
+    /**
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getTitle():array
     {
-        return $this->client->request('GET', '/api/title');
+        return json_decode($this->client->request('GET', '/api/title')->getBody()->getContents(), true);
     }
 }

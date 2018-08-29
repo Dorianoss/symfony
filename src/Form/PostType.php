@@ -16,6 +16,9 @@ class PostType extends AbstractType
             ->add('Title')
             ->add('Content')
             ->add('Author')
+            ->add('categories', null, [
+                'by_reference' => false
+            ])
             ->add('imageFile', VichImageType::class, [
                 'required' => false,
                 'allow_delete' => true,

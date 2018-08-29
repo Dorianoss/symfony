@@ -19,15 +19,11 @@ class CategoryController extends Controller
     /**
      * @Route("/", name="category_index", methods="GET")
      * @param CategoryRepository $categoryRepository
-     * @param CategoryService $categoryService
      * @return Response
      * @throws \Exception
      */
-    public function index(CategoryRepository $categoryRepository, CategoryService $categoryService): Response
+    public function index(CategoryRepository $categoryRepository): Response
     {
-//        $list=$categoryService->makeTree();
-//        dump($list);
-//        exit();
         return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findAll()]);
     }
 
