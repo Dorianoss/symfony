@@ -29,3 +29,22 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    app.form.profile:
+        class: App\Form\ProfileType
+        public: true
+        tags:
+            - { name: form.type, alias: app_user_profile }
+        arguments:
+            - '%fos_user.model.user.class%'
+
+    app.menu_builder:
+        class: App\Menu\MenuBuilder
+#        arguments: ["@knp_menu.factory", App\Repository\CategoryRepository]
+        tags:
+        - { name: knp_menu.menu_builder, method: createMainMenu, alias: main } # The alias is what is used to retrieve the menu
+
+    App\Service\TitleAPI:
+        arguments:
+            - '@eight_points_guzzle.client.api_title'
+    # ...

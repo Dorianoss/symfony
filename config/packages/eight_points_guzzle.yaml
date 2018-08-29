@@ -1,11 +1,13 @@
 eight_points_guzzle:
     clients:
-        my_client:
+        api_title:
+            base_url: "127.0.0.1:8000"
+
             # Write here the host where to do requests
             # base_url: "http://target.url"
 
             options:
-                timeout: 30
+                auth: oauth2
 
                 # Configure headers.
                 # More info: http://docs.guzzlephp.org/en/stable/request-options.html#headers
@@ -14,4 +16,13 @@ eight_points_guzzle:
 
             # Find plugins here:
             # https://github.com/8p/EightPointsGuzzleBundle#known-and-supported-plugins
-            plugin: ~
+            plugin:
+                oauth2:
+                    base_uri:       "127.0.0.1:8000"
+                    token_url:      "/oauth/v2/token"
+                    client_id:      "2_dd8e1iosnegwcgokswkcgwk4kwgkg8ockw80sos8k84wsg88s"
+                    client_secret: "2rwe10tx6hicg4o4swocssg0gcosgs0kk4ow4s00c0osssos4g"
+                    username:       "aaa"
+                    password:       "aaa"
+                    scope:          "scope1"
+                    grant_type:     "Sainsburys\\Guzzle\\Oauth2\\GrantType\\PasswordCredentials"
