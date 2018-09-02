@@ -27,7 +27,7 @@ class User extends BaseUser
     private $posts;
 
     /**
-     * @ORM\Column(type="text", length=2000)
+     * @ORM\Column(type="text", length=2000, nullable=true)
      */
     private $image;
 
