@@ -43,6 +43,9 @@ services:
       - ./public:/srv/app/public:ro
     ports:
       - '8001:80'
+    extra_hosts:
+      - "server.local:162.242.195.82" 
+
 
   # This HTTP/2 proxy is not secure: it should only be used in dev
   h2-proxy:

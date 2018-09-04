@@ -35,7 +35,7 @@ FROM php:${PHP_VERSION}-fpm-alpine AS symfony_docker_php
 RUN apk add --no-cache --virtual .persistent-deps \
 		git \
 		icu-libs \
-		zlib
+		zlib 
 
 ENV APCU_VERSION 5.1.11
 RUN set -eux \
@@ -53,7 +53,17 @@ RUN set -eux \
 	&& docker-php-ext-enable --ini-name 05-opcache.ini opcache \
 	&& apk del .build-deps
 
+
 COPY docker/app/php.ini /usr/local/etc/php/php.ini
+
+# https://stackoverflow.com/questions/31583646/cannot-find-autoconf-please-check-your-autoconf-installation-xampp-in-centos
+RUN apk add --no-cache --update --virtual buildDeps autoconf gcc make g++ \
+	&& pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo 'zend_extension="/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so"' >> /usr/local/etc/php/php.ini
+
+COPY docker/app/xdebug.ini $PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini
+
 COPY --from=composer:1.6 /usr/bin/composer /usr/bin/composer
 COPY docker/app/docker-entrypoint.sh /usr/local/bin/docker-app-entrypoint
 RUN chmod +x /usr/local/bin/docker-app-entrypoint
