@@ -29,7 +29,7 @@ services:
       MYSQL_USER: db_user
       MYSQL_PASSWORD: db_password
     ports:
-      - 3367:3306
+      - 3361:3306
 
   nginx:
     build:
