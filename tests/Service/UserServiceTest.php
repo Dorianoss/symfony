@@ -28,6 +28,9 @@ class UserServiceTest extends TestCase
         $this->assertInstanceOf(User::class, $registeredUser);
     }
 
+    /**
+     * @expectedException Exception
+     */
     public function testRegisterException()
     {
         $user = $this->prophesize(User::class);
@@ -41,9 +44,7 @@ class UserServiceTest extends TestCase
         $em->persist(Argument::type(User::class));
 
         $userService = new UserService($em->reveal());
-        try {
-            $registeredUser = $userService->register($user->reveal());
-            $this->assertInstanceOf(User::class, $registeredUser);
-        } catch (Exception $e){}
+        $registeredUser = $userService->register($user->reveal());
+        $this->assertInstanceOf(User::class, $registeredUser);
     }
 }
