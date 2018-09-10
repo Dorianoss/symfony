@@ -6,6 +6,7 @@
 /vendor/
 /report/
 /.idea/
+/public/images/
 ###< symfony/framework-bundle ###
 
 ###> symfony/web-server-bundle ###

@@ -1,3 +1,9 @@
+parameters:
+    env(OAUTH_CLIENT): ''
+    env(OAUTH_SECRET): ''
+    env(OAUTH_USERNAME): ''
+    env(OAUTH_PASSWORD): ''
+
 eight_points_guzzle:
     clients:
         api_title:
@@ -20,9 +26,9 @@ eight_points_guzzle:
                 oauth2:
                     base_uri:       "127.0.0.1:8000"
                     token_url:      "/oauth/v2/token"
-                    client_id:      "2_dd8e1iosnegwcgokswkcgwk4kwgkg8ockw80sos8k84wsg88s"
-                    client_secret: "2rwe10tx6hicg4o4swocssg0gcosgs0kk4ow4s00c0osssos4g"
-                    username:       "aaa"
-                    password:       "aaa"
+                    client_id:      '%env(resolve:OAUTH_CLIENT)%'
+                    client_secret:  '%env(resolve:OAUTH_SECRET)%'
+                    username:       '%env(resolve:OAUTH_USERNAME)%'
+                    password:       '%env(resolve:OAUTH_PASSWORD)%'
                     scope:          "scope1"
                     grant_type:     "Sainsburys\\Guzzle\\Oauth2\\GrantType\\PasswordCredentials"
