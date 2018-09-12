@@ -3,11 +3,12 @@ parameters:
     env(OAUTH_SECRET): ''
     env(OAUTH_USERNAME): ''
     env(OAUTH_PASSWORD): ''
+    env(OAUTH_URL): ''
 
 eight_points_guzzle:
     clients:
         api_title:
-            base_url: "127.0.0.1:8000"
+            base_url: '%env(resolve:OAUTH_URL)%'
 
             # Write here the host where to do requests
             # base_url: "http://target.url"
@@ -24,7 +25,7 @@ eight_points_guzzle:
             # https://github.com/8p/EightPointsGuzzleBundle#known-and-supported-plugins
             plugin:
                 oauth2:
-                    base_uri:       "127.0.0.1:8000"
+                    base_uri:       '%env(resolve:OAUTH_URL)%'
                     token_url:      "/oauth/v2/token"
                     client_id:      '%env(resolve:OAUTH_CLIENT)%'
                     client_secret:  '%env(resolve:OAUTH_SECRET)%'

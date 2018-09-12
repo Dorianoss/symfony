@@ -20,6 +20,8 @@ services:
       - /srv/app/var/sessions/
     environment:
       - SYMFONY_VERSION
+    networks:
+      - backend
 
   mysql:
     image: mysql:5.7
@@ -30,6 +32,8 @@ services:
       MYSQL_PASSWORD: db_password
     ports:
       - 3361:3306
+    networks:
+      - backend
 
   nginx:
     build:
@@ -45,6 +49,8 @@ services:
       - '8001:80'
     extra_hosts:
       - "server.local:162.242.195.82" 
+    networks:
+      - backend
 
 
   # This HTTP/2 proxy is not secure: it should only be used in dev
@@ -56,3 +62,8 @@ services:
       - ./docker/h2-proxy/default.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - '443:443'
+    networks:
+      - backend
+
+networks:
+  backend:
