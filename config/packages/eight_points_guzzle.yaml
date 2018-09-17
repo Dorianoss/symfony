@@ -8,7 +8,7 @@ parameters:
 eight_points_guzzle:
     clients:
         api_title:
-            base_url: '%env(resolve:OAUTH_URL)%'
+            base_url: "%env(resolve:OAUTH_URL)%"
 
             # Write here the host where to do requests
             # base_url: "http://target.url"

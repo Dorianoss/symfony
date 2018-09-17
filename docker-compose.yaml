@@ -47,8 +47,6 @@ services:
       - ./public:/srv/app/public:ro
     ports:
       - '8001:80'
-    extra_hosts:
-      - "server.local:162.242.195.82" 
     networks:
       - backend
 
