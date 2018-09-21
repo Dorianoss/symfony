@@ -4,6 +4,10 @@ parameters:
     env(OAUTH_USERNAME): ''
     env(OAUTH_PASSWORD): ''
     env(OAUTH_URL): ''
+    env(VK_URL): ''
+    env(VK_CLIENT): ''
+    env(VK_SECRET): ''
+    env(VK_OAUTH_URL): ''
 
 eight_points_guzzle:
     clients:
@@ -26,10 +30,34 @@ eight_points_guzzle:
             plugin:
                 oauth2:
                     base_uri:       '%env(resolve:OAUTH_URL)%'
-                    token_url:      "/oauth/v2/token"
+                    token_url:      "oauth/v2/token"
                     client_id:      '%env(resolve:OAUTH_CLIENT)%'
                     client_secret:  '%env(resolve:OAUTH_SECRET)%'
                     username:       '%env(resolve:OAUTH_USERNAME)%'
                     password:       '%env(resolve:OAUTH_PASSWORD)%'
-                    scope:          "scope1"
                     grant_type:     "Sainsburys\\Guzzle\\Oauth2\\GrantType\\PasswordCredentials"
+
+        api_vk:
+            base_url: "%env(resolve:VK_URL)%"
+
+            # Write here the host where to do requests
+            # base_url: "http://target.url"
+
+            options:
+                auth: oauth2
+
+                # Configure headers.
+                # More info: http://docs.guzzlephp.org/en/stable/request-options.html#headers
+                headers:
+                    User-Agent: "EightpointsGuzzleBundle/7.0"
+
+            # Find plugins here:
+            # https://github.com/8p/EightPointsGuzzleBundle#known-and-supported-plugins
+            plugin:
+                oauth2:
+                    base_uri:       '%env(resolve:VK_OAUTH_URL)%'
+                    token_url:      "/authorize"
+                    client_id:      '6699413'
+                    client_secret:  '%env(resolve:VK_SECRET)%'
+                    scope:          "22"
+                    grant_type:     "Sainsburys\\Guzzle\\Oauth2\\GrantType\\ClientCredentials"
