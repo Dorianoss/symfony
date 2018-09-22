@@ -12,25 +12,54 @@ class HomeController extends Controller
 {
     /**
      * @Route("/home", name="home")
-     * @param VkAPI $vkAPI
+     *
+     * @param VkAPI   $vkAPI
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws \VK\Exceptions\VKApiException
+     * @throws \VK\Exceptions\VKClientException
      */
     public function indexAction(VkAPI $vkAPI, Request $request)
     {
-        $code = $request->get('code');
-        if (!$code) {
-            $authorize = $vkAPI->authorize();
-            header('Location: ' . $authorize);
+
+        $friends = $vkAPI->getFriends();
+
+        if ($friends === false) {
+            return $this->redirectToRoute('vk_code');
         }
-        else{
-            $token = $vkAPI->getToken($code);
-            $friends = $vkAPI->getFriends($token);
-            dump($friends);
-        }
+
+        dump($friends);
+
         die;
-//        return $this->render('home/index.html.twig', [
-//            'controller_name' => 'HomeController',
-//        ]);
     }
+
+    /**
+     * @Route("/vk/code", name="vk_code")
+     *
+     * @param Request $request
+     * @param VkAPI   $vkAPI
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @throws \VK\Exceptions\VKClientException
+     * @throws \VK\Exceptions\VKOAuthException
+     */
+    public function vkAction(Request $request, VkAPI $vkAPI)
+    {
+        $code = $request->get('code');
+
+        if (!$code) {
+            return $this->redirect($vkAPI->authorize());
+        }
+
+        $token = $vkAPI->getToken($code);
+
+        $request->getSession()->set('vk_token', $token);
+
+        return $this->redirectToRoute('home');
+    }
+
+
 }
