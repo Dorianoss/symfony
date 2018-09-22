@@ -47,8 +47,3 @@ services:
     App\Service\TitleAPI:
         arguments:
             - '@eight_points_guzzle.client.api_title'
-
-    App\Service\VkAPI:
-        arguments:
-        - '@eight_points_guzzle.client.api_vk'
-    # ...
