@@ -50,4 +50,6 @@ services:
 
     App\Service\VkAPI:
         arguments:
-            - '@eight_points_guzzle.client.vk_oauth'
+            - '%env(int:VK_CLIENT)%'
+            - '%env(resolve:VK_SECRET)%'
+            - '%env(resolve:VK_REDIRECT)%'

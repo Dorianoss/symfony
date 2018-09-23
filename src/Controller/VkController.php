@@ -8,10 +8,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use VK\Client\VKApiClient;
 
-class HomeController extends Controller
+class VkController extends Controller
 {
     /**
-     * @Route("/home", name="home")
+     * @Route("/vk", name="vk")
      *
      * @param VkAPI   $vkAPI
      * @param Request $request
@@ -58,7 +58,7 @@ class HomeController extends Controller
 
         $request->getSession()->set('vk_token', $token);
 
-        return $this->redirectToRoute('home');
+        return $this->redirectToRoute('vk');
     }
 
 

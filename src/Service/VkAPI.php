@@ -17,21 +17,40 @@ use VK\OAuth\VKOAuthResponseType;
 class VkAPI
 {
 
-    const VK_REDIRECT_URL  = 'http://127.0.0.1:8001/vk/code';
-
     /**
      * @var SessionInterface
      */
     protected $session;
 
     /**
+     * @var int
+     */
+    private $clientId;
+
+    /**
+     * @var string
+     */
+    private $clientSecret;
+
+    /**
+     * @var string
+     */
+    private $redirectUri;
+
+    /**
      * VkAPI constructor.
      *
+     * @param int $clientId
+     * @param string $clientSecret
+     * @param string $redirectUri
      * @param SessionInterface $session
      */
-    public function __construct( SessionInterface $session)
+    public function __construct( int $clientId, string $clientSecret, string $redirectUri, SessionInterface $session)
     {
         $this->session = $session;
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->redirectUri = $redirectUri;
     }
 
     /**
@@ -40,8 +59,8 @@ class VkAPI
     public function authorize() : string
     {
         $oauth = new VKOAuth();
-        $client_id = 6699413;
-        $redirect_uri = self::VK_REDIRECT_URL;
+        $client_id = $this->clientId;
+        $redirect_uri = $this->redirectUri;
         $display = VKOAuthDisplay::PAGE;
         $scope = [VKOAuthUserScope::FRIENDS, VKOAuthUserScope::PHOTOS, VKOAuthUserScope::VIDEO];
         $state = 'secret_state_code';
@@ -62,9 +81,9 @@ class VkAPI
     public function getToken(string $code) : string
     {
         $oauth = new VKOAuth();
-        $client_id = 6699413;
-        $client_secret = 'nhoRcQSIyzt4KwROC6B0';
-        $redirect_uri = self::VK_REDIRECT_URL;
+        $client_id = $this->clientId;
+        $client_secret = $this->clientSecret;
+        $redirect_uri = $this->redirectUri;
 
         $response = $oauth->getAccessToken($client_id, $client_secret, $redirect_uri, $code);
 
