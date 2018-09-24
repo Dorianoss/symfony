@@ -23,30 +23,28 @@ class VkController extends Controller
      */
     public function indexAction(VkAPI $vkAPI, Request $request)
     {
-
-        $friends = $vkAPI->getFriends();
-
-        if ($friends === false) {
-            return $this->redirectToRoute('vk_code');
+        $type = $request->getSession()->get('type');
+        if ($type) {
+            $data = $vkAPI->getData($type);
+            if ($data === false) {
+                return $this->redirectToRoute('vk_code');
+            }
+            else {
+                dump($data);
+            }
         }
-
-
         $form = $this->createForm(VkType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $vk = $form->getData();
-            dump($vk);
+            $request->getSession()->set('type', $vk["type"]);
         }
 
         return $this->render('vk/vk.html.twig', array(
             'form' => $form->createView(),
         ));
-
-//        return $this->render('vk/vk.html.twig', array(
-//            'form' => $form->createView(),
-//        ));
     }
 
     /**

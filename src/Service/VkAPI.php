@@ -91,18 +91,32 @@ class VkAPI
     }
 
     /**
+     * @param $type
      * @return mixed
      *
      * @throws \VK\Exceptions\VKApiException
      * @throws \VK\Exceptions\VKClientException
      */
-    public function getFriends()
+    public function getData($type)
     {
         $vk = new VKApiClient();
         $token = $this->session->get('vk_token');
 
         if (!$token) return false;
 
-        return $response = $vk->friends()->get($token);
+        switch ($type) {
+            case "friend":
+                $response = $vk->friends()->get($token);
+                break;
+            case "photo":
+                $response = $vk->photos()->getAll($token);
+                break;
+            case "video":
+                $response = $vk->video()->get($token);
+                break;
+            default: $response = null;
+        }
+
+        return $response;
     }
 }
