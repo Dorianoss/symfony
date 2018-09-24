@@ -2,14 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Vk;
+use App\Form\VkType;
 use App\Service\VkAPI;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use VK\Client\VKApiClient;
 
 class VkController extends Controller
 {
@@ -33,35 +30,16 @@ class VkController extends Controller
             return $this->redirectToRoute('vk_code');
         }
 
-        $vk = new Vk();
-        $form = $this->createFormBuilder($vk)
-            ->add('type', ChoiceType::class, array(
-                'choices'  => array(
-                    'Friend' => "friend",
-                    'Photo' => "photo",
-                    'Video' => "video",
-                ),
-                'expanded' => true,
-                'multiple' => false,
-            ))
-            ->add('save', SubmitType::class, array('label' => 'Get data'))
-            ->getForm();
+
+        $form = $this->createForm(VkType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // $form->getData() holds the submitted values
-            // but, the original `$task` variable has also been updated
+            $vk = $form->getData();
             dump($vk);
-
-
-            // ... perform some action, such as saving the task to the database
-            // for example, if Task is a Doctrine entity, save it!
-            // $entityManager = $this->getDoctrine()->getManager();
-            // $entityManager->persist($task);
-            // $entityManager->flush();
-
         }
+
         return $this->render('vk/vk.html.twig', array(
             'form' => $form->createView(),
         ));

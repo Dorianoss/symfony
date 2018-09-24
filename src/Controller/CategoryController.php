@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
-use App\Form\Category1Type;
+use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use App\Service\CategoryService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,11 +29,13 @@ class CategoryController extends Controller
 
     /**
      * @Route("/new", name="category_new", methods="GET|POST")
+     * @param Request $request
+     * @return Response
      */
     public function new(Request $request): Response
     {
         $category = new Category();
-        $form = $this->createForm(Category1Type::class, $category);
+        $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -62,10 +64,13 @@ class CategoryController extends Controller
 
     /**
      * @Route("/{id}/edit", name="category_edit", methods="GET|POST")
+     * @param Request $request
+     * @param Category $category
+     * @return Response
      */
     public function edit(Request $request, Category $category): Response
     {
-        $form = $this->createForm(Category1Type::class, $category);
+        $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -82,6 +87,9 @@ class CategoryController extends Controller
 
     /**
      * @Route("/{id}", name="category_delete", methods="DELETE")
+     * @param Request $request
+     * @param Category $category
+     * @return Response
      */
     public function delete(Request $request, Category $category): Response
     {
