@@ -9,6 +9,7 @@ namespace App\Service;
 
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use VK\Client\VKApiClient;
+use VK\Exceptions\Api\VKApiAuthException;
 use VK\OAuth\Scopes\VKOAuthUserScope;
 use VK\OAuth\VKOAuth;
 use VK\OAuth\VKOAuthDisplay;
@@ -103,19 +104,28 @@ class VkAPI
         $token = $this->session->get('vk_token');
 
         if (!$token) return false;
+        try {
+            switch ($type) {
+                case "friend":
+                    $userID = $vk->friends()->get($token)["items"][0];
+                    $response = $vk->users()->get($token, ['user_ids' => $userID]);
 
-        switch ($type) {
-            case "friend":
-                $response = $vk->friends()->get($token);
-                break;
-            case "photo":
-                $response = $vk->photos()->getAll($token);
-                break;
-            case "video":
-                $response = $vk->video()->get($token);
-                break;
-            default: $response = null;
+                    break;
+                case "photo":
+                    $response = $vk->photos()->getAll($token)["items"][0]["sizes"][0]["url"];
+                    break;
+                case "video":
+                    $response = $vk->video()->get($token)["items"][0]["player"];
+                    break;
+                default:
+                    $response = null;
+            }
+        }catch (VKApiAuthException $e)
+        {
+            $this->session->set('vk_token', null);
+            $response = false;
         }
+
 
         return $response;
     }
