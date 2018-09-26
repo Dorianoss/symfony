@@ -13,38 +13,23 @@ class VkController extends Controller
     /**
      * @Route("/vk", name="vk")
      *
-     * @param VkAPI   $vkAPI
+     * @param VkAPI $vkAPI
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
-     * @throws \VK\Exceptions\VKApiException
-     * @throws \VK\Exceptions\VKClientException
      */
     public function indexAction(VkAPI $vkAPI, Request $request)
     {
-        $type = $request->getSession()->get('type');
-        if ($type) {
-            $data = $vkAPI->getData($type);
-            if ($data === false) {
-                return $this->redirectToRoute('vk_code');
-            }
-        }
-
         $form = $this->createForm(VkType::class);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $vk = $form->getData();
-            $request->getSession()->set('type', $vk["type"]);
-            $type = $request->getSession()->get('type');
-            $data = $vkAPI->getData($type);
-            $request->getSession()->set('data', $data);
-            return $this->redirectToRoute('vk_show');
+            $type = $vk["type"];
+            return $this->redirectToRoute('vk_show', ['type' => $type]);
         }
-
-
 
         return $this->render('vk/vk_form.html.twig', array(
             'form' => $form->createView(),
@@ -54,7 +39,7 @@ class VkController extends Controller
 
 
     /**
-     * @Route("/vk/code", name="vk_code")
+     * @Route("/vk/code/{type}", name="vk_code")
      *
      * @param Request $request
      * @param VkAPI   $vkAPI
@@ -64,7 +49,7 @@ class VkController extends Controller
      * @throws \VK\Exceptions\VKClientException
      * @throws \VK\Exceptions\VKOAuthException
      */
-    public function vkAction(Request $request, VkAPI $vkAPI)
+    public function vkAction($type, Request $request, VkAPI $vkAPI)
     {
         $code = $request->get('code');
 
@@ -76,20 +61,23 @@ class VkController extends Controller
 
         $request->getSession()->set('vk_token', $token);
 
-        return $this->redirectToRoute('vk');
+        return $this->redirectToRoute('vk_show', ['type' => $type]);
     }
 
     /**
-     * @Route("/vk/show", name="vk_show")
+     * @Route("/vk/show/{type}", name="vk_show")
      * @param Request $request
+     * @param VkAPI $vkAPI
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function vkShow(Request $request)
+    public function vkShow($type, Request $request, VkAPI $vkAPI)
     {
-        $data = $request->getSession()->get('data');
-        $type = $request->getSession()->get('type');
-//        dump($data);
-//        die;
+        if ($type) {
+            $data = $vkAPI->getData($type);
+            if ($data === false) {
+                return $this->redirectToRoute('vk_code', ['type' => $type]);
+            }
+        }
         switch ($type) {
             case "friend":
                 return $this->render('vk/friend.html.twig', ['name' => $data[0]["first_name"], 'surname' =>

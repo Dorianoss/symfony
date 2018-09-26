@@ -10,6 +10,8 @@ namespace App\Service;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use VK\Client\VKApiClient;
 use VK\Exceptions\Api\VKApiAuthException;
+use VK\Exceptions\VKApiException;
+use VK\Exceptions\VKClientException;
 use VK\OAuth\Scopes\VKOAuthUserScope;
 use VK\OAuth\VKOAuth;
 use VK\OAuth\VKOAuthDisplay;
@@ -95,37 +97,80 @@ class VkAPI
      * @param $type
      * @return mixed
      *
-     * @throws \VK\Exceptions\VKApiException
-     * @throws \VK\Exceptions\VKClientException
      */
     public function getData($type)
+    {
+        switch ($type) {
+            case "friend":
+                $response = $this->getFriend();
+                break;
+            case "photo":
+                $response = $this->getPhoto();
+                break;
+            case "video":
+                $response = $this->getVideo();
+                break;
+            default:
+                $response = null;
+            }
+
+        return $response;
+    }
+
+    public function getFriend()
     {
         $vk = new VKApiClient();
         $token = $this->session->get('vk_token');
 
         if (!$token) return false;
         try {
-            switch ($type) {
-                case "friend":
-                    $userID = $vk->friends()->get($token)["items"][0];
-                    $response = $vk->users()->get($token, ['user_ids' => $userID]);
-
-                    break;
-                case "photo":
-                    $response = $vk->photos()->getAll($token)["items"][0]["sizes"][0]["url"];
-                    break;
-                case "video":
-                    $response = $vk->video()->get($token)["items"][0]["player"];
-                    break;
-                default:
-                    $response = null;
-            }
-        }catch (VKApiAuthException $e)
+            $userID = $vk->friends()->get($token)["items"][0];
+            $response = $vk->users()->get($token, ['user_ids' => $userID]);
+        } catch (VKApiAuthException $e)
         {
             $this->session->set('vk_token', null);
             $response = false;
+        } catch (VKApiException $e) {
+        } catch (VKClientException $e) {
         }
 
+        return $response;
+    }
+
+    public function getPhoto()
+    {
+        $vk = new VKApiClient();
+        $token = $this->session->get('vk_token');
+
+        if (!$token) return false;
+        try {
+            $response = $vk->photos()->getAll($token)["items"][0]["sizes"][0]["url"];
+        } catch (VKApiAuthException $e)
+        {
+            $this->session->set('vk_token', null);
+            $response = false;
+        } catch (VKApiException $e) {
+        } catch (VKClientException $e) {
+        }
+
+        return $response;
+    }
+
+    public function getVideo()
+    {
+        $vk = new VKApiClient();
+        $token = $this->session->get('vk_token');
+
+        if (!$token) return false;
+        try {
+            $response = $vk->video()->get($token)["items"][0]["player"];
+        } catch (VKApiAuthException $e)
+        {
+            $this->session->set('vk_token', null);
+            $response = false;
+        } catch (VKApiException $e) {
+        } catch (VKClientException $e) {
+        }
 
         return $response;
     }
