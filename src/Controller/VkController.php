@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Form\VkType;
+use App\Service\VK\VKTypeRegistry;
 use App\Service\VkAPI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -67,13 +68,12 @@ class VkController extends Controller
     /**
      * @Route("/vk/show/{type}", name="vk_show")
      * @param Request $request
-     * @param VkAPI $vkAPI
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function vkShow($type, Request $request, VkAPI $vkAPI)
+    public function vkShow($type, Request $request, VKTypeRegistry $vkType)
     {
         if ($type) {
-            $data = $vkAPI->getData($type);
+            $data = $vkType->fetch($type);
             if ($data === false) {
                 return $this->redirectToRoute('vk_code', ['type' => $type]);
             }

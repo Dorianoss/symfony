@@ -11,5 +11,5 @@ interface TypeInterface
      */
     public function getName() : string;
 
-    public function getData() : mixed;
+    public function getData();
 }

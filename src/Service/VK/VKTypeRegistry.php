@@ -15,6 +15,8 @@ class VKTypeRegistry
 
     public function fetch($type)
     {
+        dump($this->types);
+        die;
         return $this->types[$type]->getData();
     }
 

@@ -53,3 +53,9 @@ services:
             - '%env(int:VK_CLIENT)%'
             - '%env(resolve:VK_SECRET)%'
             - '%env(resolve:VK_REDIRECT)%'
+
+    App\Service\VkFriend:
+
+    App\Service\VkPhoto:
+
+    App\Service\VkVideo:
